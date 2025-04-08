@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	keepertest "github.com/alice/checkers/testutil/keeper"	
+	keepertest "github.com/alice/checkers/testutil/keeper"
+	"github.com/alice/checkers/x/checkers/keeper"
 	checkers "github.com/alice/checkers/x/checkers/module"
 	"github.com/alice/checkers/x/checkers/testutil"
-	"github.com/alice/checkers/x/checkers/keeper"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -55,7 +55,6 @@ func TestCreate1GameHasSaved(t *testing.T) {
 		Red:   testutil.Carol,
 	}, game1)
 }
-
 
 func TestCreate1GameGetAll(t *testing.T) {
 	msgSrvr, keeper, context := setupMsgServerCreateGame(t)
