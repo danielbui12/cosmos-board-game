@@ -22,6 +22,8 @@ func setupMsgServerWithOneGameForPlayMove(t testing.TB) (types.MsgServer, keeper
 		Black:   bob,
 		Red:     carol,
 	})
+	// Clear events after game creation
+	sdk.UnwrapSDKContext(context).EventManager().EmitEvents([]sdk.Event{})
 	return server, k, context
 }
 
@@ -306,4 +308,41 @@ func TestPlayMove3SavedGame(t *testing.T) {
 		Black: bob,
 		Red:   carol,
 	}, game1)
+}
+
+func TestPlayMoveEmitted(t *testing.T) {
+	msgServer, _, context := setupMsgServerWithOneGameForPlayMove(t)
+	ctx := sdk.UnwrapSDKContext(context)
+	msgServer.PlayMove(context, &types.MsgPlayMove{
+		Creator:   bob,
+		GameIndex: "1",
+		FromX:     1,
+		FromY:     2,
+		ToX:       2,
+		ToY:       3,
+	})
+	require.NotNil(t, ctx)
+	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
+	require.Len(t, events, 2) // We expect both new-game-created and move-played events
+	
+	// Find the move-played event
+	var moveEvent sdk.StringEvent
+	for _, event := range events {
+		if event.Type == "move-played" {
+			moveEvent = event
+			break
+		}
+	}
+	require.NotEmpty(t, moveEvent, "move-played event not found")
+	
+	require.EqualValues(t, sdk.StringEvent{
+		Type: "move-played",
+		Attributes: []sdk.Attribute{
+			{Key: "creator", Value: bob},
+			{Key: "game-index", Value: "1"},
+			{Key: "captured-x", Value: "-1"},
+			{Key: "captured-y", Value: "-1"},
+			{Key: "winner", Value: "*"},
+		},
+	}, moveEvent)
 }
