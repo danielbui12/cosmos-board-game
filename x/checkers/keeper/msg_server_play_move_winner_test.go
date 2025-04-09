@@ -34,6 +34,8 @@ func TestPlayMoveUpToWinner(t *testing.T) {
 		Black:  bob,
 		Red:    carol,
 		Winner: "b",
+		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
+		MoveCount: 40,
 	}, game)
 	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
 	require.Len(t, events, 41)
