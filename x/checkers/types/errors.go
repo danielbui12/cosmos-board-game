@@ -19,4 +19,5 @@ var (
 	ErrCreatorNotPlayer     = sdkerrors.Register(ModuleName, 1108, "message creator is not a player")
 	ErrNotPlayerTurn        = sdkerrors.Register(ModuleName, 1109, "player tried to play out of turn")
 	ErrWrongMove            = sdkerrors.Register(ModuleName, 1110, "wrong move")
+	ErrGameFinished         = sdkerrors.Register(ModuleName, 1111, "game is already finished")
 )

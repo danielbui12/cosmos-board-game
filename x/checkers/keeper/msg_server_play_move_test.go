@@ -106,6 +106,7 @@ func TestPlayMoveSavedGame(t *testing.T) {
 		Turn:  "r",
 		Black: bob,
 		Red:   carol,
+		Winner:    "*",
 	}, game1)
 }
 
@@ -230,6 +231,7 @@ func TestPlayMove2SavedGame(t *testing.T) {
 		Turn:  "b",
 		Black: bob,
 		Red:   carol,
+		Winner:    "*",
 	}, game1)
 }
 
@@ -307,6 +309,7 @@ func TestPlayMove3SavedGame(t *testing.T) {
 		Turn:  "r",
 		Black: bob,
 		Red:   carol,
+		Winner:    "*",
 	}, game1)
 }
 
@@ -343,6 +346,7 @@ func TestPlayMoveEmitted(t *testing.T) {
 			{Key: "captured-x", Value: "-1"},
 			{Key: "captured-y", Value: "-1"},
 			{Key: "winner", Value: "*"},
+			{Key: "board", Value: "*b*b*b*b|b*b*b*b*|***b*b*b|**b*****|********|r*r*r*r*|*r*r*r*r|r*r*r*r*"},
 		},
 	}, moveEvent)
 }
