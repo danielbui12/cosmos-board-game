@@ -44,6 +44,8 @@ func TestCreate1GameHasSaved(t *testing.T) {
 	require.True(t, found)
 	require.EqualValues(t, types.SystemInfo{
 		NextId: 2,
+		FifoHeadIndex: "1",
+		FifoTailIndex: "1",
 	}, systemInfo)
 	game1, found1 := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found1)
@@ -56,6 +58,8 @@ func TestCreate1GameHasSaved(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  types.NoFifoIndex,
 	}, game1)
 }
 
@@ -74,10 +78,12 @@ func TestCreate1GameGetAll(t *testing.T) {
 		Board: "*b*b*b*b|b*b*b*b*|*b*b*b*b|********|********|r*r*r*r*|*r*r*r*r|r*r*r*r*",
 		Turn:  "b",
 		Black: bob,
-		Red:   carol,
-		Winner:    "*",
-		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
-		MoveCount: 0,
+		Red:         carol,
+		Winner:      "*",
+		Deadline:    types.FormatDeadline(types.GetNextDeadline(ctx)),
+		MoveCount:   0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  types.NoFifoIndex,
 	}, games[0])
 }
 
@@ -156,6 +162,8 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 	require.True(t, found)
 	require.EqualValues(t, types.SystemInfo{
 		NextId: 4,
+		FifoHeadIndex: "1",
+		FifoTailIndex: "3",
 	}, systemInfo)
 	game1, found1 := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found1)
@@ -168,6 +176,8 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  "2",
 	}, game1)
 	game2, found2 := keeper.GetStoredGame(ctx, "2")
 	require.True(t, found2)
@@ -180,6 +190,8 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: "1",
+		AfterIndex:  "3",
 	}, game2)
 	game3, found3 := keeper.GetStoredGame(ctx, "3")
 	require.True(t, found3)
@@ -192,6 +204,8 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: "2",
+		AfterIndex:  types.NoFifoIndex,
 	}, game3)
 }
 
@@ -224,6 +238,8 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  "2",
 	}, games[0])
 	require.EqualValues(t, types.StoredGame{
 		Index: "2",
@@ -234,6 +250,8 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: "1",
+		AfterIndex:  "3",
 	}, games[1])
 	require.EqualValues(t, types.StoredGame{
 		Index: "3",
@@ -244,6 +262,8 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: "2",
+		AfterIndex:  types.NoFifoIndex,
 	}, games[2])
 }
 
@@ -267,6 +287,8 @@ func TestCreateGameFarFuture(t *testing.T) {
 	require.True(t, found)
 	require.EqualValues(t, types.SystemInfo{
 		NextId: 1025,
+		FifoHeadIndex: "1024",
+		FifoTailIndex: "1024",
 	}, systemInfo)
 	game1, found1 := keeper.GetStoredGame(ctx, "1024")
 	require.True(t, found1)
@@ -279,6 +301,8 @@ func TestCreateGameFarFuture(t *testing.T) {
 		Winner:    "*",
 		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
 		MoveCount: 0,
+		BeforeIndex: types.NoFifoIndex,
+		AfterIndex:  types.NoFifoIndex,
 	}, game1)
 }
 
