@@ -12,7 +12,7 @@ import (
 
 func SimulateMsgCreateGame(
 	ak types.AccountKeeper,
-	bk types.BankKeeper,
+	bk types.BankEscrowKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,

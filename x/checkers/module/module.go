@@ -97,14 +97,14 @@ type AppModule struct {
 
 	keeper        keeper.Keeper
 	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
+	bankKeeper    types.BankEscrowKeeper
 }
 
 func NewAppModule(
 	cdc codec.Codec,
 	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
-	bankKeeper types.BankKeeper,
+	bankKeeper types.BankEscrowKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
@@ -182,7 +182,7 @@ type ModuleInputs struct {
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
-	BankKeeper    types.BankKeeper
+	BankKeeper    types.BankEscrowKeeper
 }
 
 type ModuleOutputs struct {
@@ -199,6 +199,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		authority = authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
 	}
 	k := keeper.NewKeeper(
+		in.BankKeeper,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,

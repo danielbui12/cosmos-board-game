@@ -7,24 +7,36 @@ import (
 	keepertest "github.com/alice/checkers/testutil/keeper"
 	"github.com/alice/checkers/x/checkers/keeper"
 	checkers "github.com/alice/checkers/x/checkers/module"
+	"github.com/alice/checkers/x/checkers/testutil"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 
 func setupMsgServerWithOneGameForPlayMove(t testing.TB) (types.MsgServer, keeper.Keeper, context.Context) {
-	k, ctx := keepertest.CheckersKeeper(t)
+	server, k, context, _, escrow := setupMsgServerWithOneGameForPlayMoveWithMock(t)
+	escrow.ExpectAny(context)
+	return server, k, context
+}
+
+func setupMsgServerWithOneGameForPlayMoveWithMock(t testing.TB) (types.MsgServer, keeper.Keeper, context.Context,
+	*gomock.Controller, *testutil.MockBankEscrowKeeper) {
+	ctrl := gomock.NewController(t)
+	bankMock := testutil.NewMockBankEscrowKeeper(ctrl)
+	k, ctx := keepertest.CheckersKeeperWithMocks(t, bankMock)
 	checkers.InitGenesis(ctx, k, *types.DefaultGenesis())
 	server := keeper.NewMsgServerImpl(k)
 	context := sdk.WrapSDKContext(ctx)
 	server.CreateGame(context, &types.MsgCreateGame{
-		Creator: alice,
-		Black:   bob,
-		Red:     carol,
+			Creator: alice,
+			Black:   bob,
+			Red:     carol,
+			Wager:   45,
 	})
 	// Clear events after game creation
 	sdk.UnwrapSDKContext(context).EventManager().EmitEvents([]sdk.Event{})
-	return server, k, context
+	return server, k, context, ctrl, bankMock
 }
 
 func TestPlayMove(t *testing.T) {
@@ -60,11 +72,12 @@ func TestPlayMoveGameNotFound(t *testing.T) {
 }
 
 func TestPlayMoveSameBlackRed(t *testing.T) {
-	msgServer, _, context := setupMsgServerCreateGame(t)
+	msgServer, _, context := setupMsgServerWithOneGameForPlayMove(t)
 	msgServer.CreateGame(context, &types.MsgCreateGame{
 		Creator: alice,
 		Black:   bob,
 		Red:     bob,
+		Wager:   45,
 	})
 	playMoveResponse, err := msgServer.PlayMove(context, &types.MsgPlayMove{
 		Creator:   bob,
@@ -113,7 +126,22 @@ func TestPlayMoveSavedGame(t *testing.T) {
 		MoveCount: 1,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager:   45,
 	}, game1)
+}
+
+func TestPlayMoveCalledBank(t *testing.T) {
+	msgServer, _, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMoveWithMock(t)
+	defer ctrl.Finish()
+	escrow.ExpectPay(context, bob, 45).Times(1)
+	msgServer.PlayMove(context, &types.MsgPlayMove{
+		Creator:   bob,
+		GameIndex: "1",
+		FromX:     1,
+		FromY:     2,
+		ToX:       2,
+		ToY:       3,
+	})
 }
 
 func TestPlayMoveNotPlayer(t *testing.T) {
@@ -244,6 +272,7 @@ func TestPlayMove2SavedGame(t *testing.T) {
 		MoveCount: 2,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager:   45,
 	}, game1)
 }
 
@@ -328,6 +357,7 @@ func TestPlayMove3SavedGame(t *testing.T) {
 		MoveCount: 3,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager:   45,
 	}, game1)
 }
 

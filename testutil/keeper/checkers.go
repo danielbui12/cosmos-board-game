@@ -19,9 +19,15 @@ import (
 
 	"github.com/alice/checkers/x/checkers/keeper"
 	"github.com/alice/checkers/x/checkers/types"
+	"github.com/alice/checkers/x/checkers/testutil"
 )
 
 func CheckersKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
+	k, ctx := CheckersKeeperWithMocks(t, nil)
+	return k, ctx
+}
+
+func CheckersKeeperWithMocks(t testing.TB, bank *testutil.MockBankEscrowKeeper) (keeper.Keeper, sdk.Context) {
 	storeKey := storetypes.NewKVStoreKey(types.StoreKey)
 
 	db := dbm.NewMemDB()
@@ -34,6 +40,7 @@ func CheckersKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
 
 	k := keeper.NewKeeper(
+		bank,
 		cdc,
 		runtime.NewKVStoreService(storeKey),
 		log.NewNopLogger(),

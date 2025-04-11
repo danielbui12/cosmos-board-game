@@ -25,6 +25,7 @@ func TestCreateGame(t *testing.T) {
 		Creator: testutil.Alice,
 		Black:   testutil.Bob,
 		Red:     testutil.Carol,
+		Wager:   45,
 	})
 	require.Nil(t, err)
 	require.EqualValues(t, types.MsgCreateGameResponse{
@@ -39,6 +40,7 @@ func TestCreate1GameHasSaved(t *testing.T) {
 		Creator: testutil.Alice,
 		Black:   testutil.Bob,
 		Red:     testutil.Carol,
+		Wager:   45,
 	})
 	systemInfo, found := keeper.GetSystemInfo(ctx)
 	require.True(t, found)
@@ -60,6 +62,7 @@ func TestCreate1GameHasSaved(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager: 45,
 	}, game1)
 }
 
@@ -69,6 +72,7 @@ func TestCreate1GameGetAll(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	ctx := sdk.UnwrapSDKContext(context)
 	games := keeper.GetAllStoredGame(ctx)
@@ -84,6 +88,7 @@ func TestCreate1GameGetAll(t *testing.T) {
 		MoveCount:   0,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager: 45,
 	}, games[0])
 }
 
@@ -93,6 +98,7 @@ func TestCreateGameRedAddressBad(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     "notanaddress",
+		Wager:   45,
 	})
 	require.Nil(t, createResponse)
 	require.Equal(t,
@@ -106,6 +112,7 @@ func TestCreateGameEmptyRedAddress(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     "",
+		Wager:   45,
 	})
 	require.Nil(t, createResponse)
 	require.Equal(t,
@@ -119,11 +126,13 @@ func TestCreate3Games(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	createResponse2, err2 := msgSrvr.CreateGame(context, &types.MsgCreateGame{
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	require.Nil(t, err2)
 	require.EqualValues(t, types.MsgCreateGameResponse{
@@ -133,6 +142,7 @@ func TestCreate3Games(t *testing.T) {
 		Creator: carol,
 		Black:   alice,
 		Red:     bob,
+		Wager:   45,
 	})
 	require.Nil(t, err3)
 	require.EqualValues(t, types.MsgCreateGameResponse{
@@ -147,16 +157,19 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	msgSrvr.CreateGame(context, &types.MsgCreateGame{
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	msgSrvr.CreateGame(context, &types.MsgCreateGame{
 		Creator: carol,
 		Black:   alice,
 		Red:     bob,
+		Wager:   45,
 	})
 	systemInfo, found := keeper.GetSystemInfo(ctx)
 	require.True(t, found)
@@ -178,6 +191,7 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  "2",
+		Wager: 45,
 	}, game1)
 	game2, found2 := keeper.GetStoredGame(ctx, "2")
 	require.True(t, found2)
@@ -192,6 +206,7 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: "1",
 		AfterIndex:  "3",
+		Wager: 45,
 	}, game2)
 	game3, found3 := keeper.GetStoredGame(ctx, "3")
 	require.True(t, found3)
@@ -206,6 +221,7 @@ func TestCreate3GamesHasSaved(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: "2",
 		AfterIndex:  types.NoFifoIndex,
+		Wager: 45,
 	}, game3)
 }
 
@@ -215,16 +231,19 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	msgSrvr.CreateGame(context, &types.MsgCreateGame{
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	msgSrvr.CreateGame(context, &types.MsgCreateGame{
 		Creator: carol,
 		Black:   alice,
 		Red:     bob,
+		Wager:   45,
 	})
 	ctx := sdk.UnwrapSDKContext(context)
 	games := keeper.GetAllStoredGame(ctx)
@@ -240,6 +259,7 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  "2",
+		Wager: 45,
 	}, games[0])
 	require.EqualValues(t, types.StoredGame{
 		Index: "2",
@@ -252,6 +272,7 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: "1",
 		AfterIndex:  "3",
+		Wager: 45,
 	}, games[1])
 	require.EqualValues(t, types.StoredGame{
 		Index: "3",
@@ -264,6 +285,7 @@ func TestCreate3GamesGetAll(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: "2",
 		AfterIndex:  types.NoFifoIndex,
+		Wager: 45,
 	}, games[2])
 }
 
@@ -278,6 +300,7 @@ func TestCreateGameFarFuture(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	require.Nil(t, err)
 	require.EqualValues(t, types.MsgCreateGameResponse{
@@ -303,6 +326,7 @@ func TestCreateGameFarFuture(t *testing.T) {
 		MoveCount: 0,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
+		Wager: 45,
 	}, game1)
 }
 
@@ -312,6 +336,7 @@ func TestCreate1GameEmitted(t *testing.T) {
 			Creator: alice,
 			Black:   bob,
 			Red:     carol,
+			Wager:   45,
 	})
 	ctx := sdk.UnwrapSDKContext(context)
 	require.NotNil(t, ctx)
@@ -325,6 +350,7 @@ func TestCreate1GameEmitted(t *testing.T) {
 					{Key: "game-index", Value: "1"},
 					{Key: "black", Value: bob},
 					{Key: "red", Value: carol},
-			},
+					{Key: "wager", Value: "45"},
+		},
 	}, event)
 }

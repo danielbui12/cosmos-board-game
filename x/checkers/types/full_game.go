@@ -7,6 +7,7 @@ import (
 	errors "cosmossdk.io/errors"
 	"github.com/alice/checkers/x/checkers/rules"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"cosmossdk.io/math"
 )
 
 func (storedGame StoredGame) GetBlackAddress() (black sdk.AccAddress, err error) {
@@ -64,6 +65,9 @@ func GetNextDeadline(ctx sdk.Context) time.Time {
 	return ctx.BlockTime().Add(MaxTurnDuration)
 }
 
+func (storedGame *StoredGame) GetWagerCoin() (wager sdk.Coin) {
+	return sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(int64(storedGame.Wager)))
+}
 
 func (storedGame StoredGame) Validate() (err error) {
 	_, err = storedGame.GetBlackAddress()

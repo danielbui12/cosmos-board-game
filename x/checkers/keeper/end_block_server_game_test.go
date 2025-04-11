@@ -49,6 +49,7 @@ func TestForfeitOlderUnplayed(t *testing.T) {
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -87,6 +88,7 @@ func TestForfeit2OldestUnplayedIn1Call(t *testing.T) {
 		Creator: alice,
 		Black:   bob,
 		Red:     carol,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -165,6 +167,27 @@ func TestForfeitPlayedOnce(t *testing.T) {
 	}, event)
 }
 
+func TestForfeitPlayedOnceCalledBank(t *testing.T) {
+	msgServer, keeper, context, ctrl, escrow := setupMsgServerWithOneGameForPlayMoveWithMock(t)
+	ctx := sdk.UnwrapSDKContext(context)
+	defer ctrl.Finish()
+	pay := escrow.ExpectPay(context, bob, 45).Times(1)
+	escrow.ExpectRefund(context, bob, 45).Times(1).After(pay)
+	msgServer.PlayMove(context, &types.MsgPlayMove{
+		Creator:   bob,
+		GameIndex: "1",
+		FromX:     1,
+		FromY:     2,
+		ToX:       2,
+		ToY:       3,
+	})
+	game1, found := keeper.GetStoredGame(ctx, "1")
+	require.True(t, found)
+	game1.Deadline = types.FormatDeadline(ctx.BlockTime().Add(time.Duration(-1)))
+	keeper.SetStoredGame(ctx, game1)
+	keeper.ForfeitExpiredGames(context)
+}
+
 func TestForfeitOlderPlayedOnce(t *testing.T) {
 	msgServer, keeper, context := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
@@ -180,6 +203,7 @@ func TestForfeitOlderPlayedOnce(t *testing.T) {
 		Creator: bob,
 		Red:     carol,
 		Black:   alice,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -226,6 +250,7 @@ func TestForfeit2OldestPlayedOnceIn1Call(t *testing.T) {
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	msgServer.PlayMove(context, &types.MsgPlayMove{
 		Creator:   carol,
@@ -239,6 +264,7 @@ func TestForfeit2OldestPlayedOnceIn1Call(t *testing.T) {
 		Creator: carol,
 		Black:   alice,
 		Red:     bob,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -317,6 +343,7 @@ func TestForfeitPlayedTwice(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
+		Wager:   45,
 	}, game1)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)
@@ -362,6 +389,7 @@ func TestForfeitOlderPlayedTwice(t *testing.T) {
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -384,6 +412,7 @@ func TestForfeitOlderPlayedTwice(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
+		Wager:   45,
 	}, game1)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)
@@ -429,6 +458,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		Creator: bob,
 		Black:   carol,
 		Red:     alice,
+		Wager:   45,
 	})
 	msgServer.PlayMove(context, &types.MsgPlayMove{
 		Creator:   carol,
@@ -450,6 +480,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		Creator: carol,
 		Black:   alice,
 		Red:     bob,
+		Wager:   45,
 	})
 	game1, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
@@ -476,6 +507,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
+		Wager:   45,
 	}, game1)
 
 	game2, found = keeper.GetStoredGame(ctx, "2")
@@ -491,6 +523,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
+		Wager:   45,
 	}, game2)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)

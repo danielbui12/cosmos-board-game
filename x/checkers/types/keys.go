@@ -28,9 +28,10 @@ const (
 const (
 	GameCreatedEventType      = "new-game-created" // Indicates what event type to listen to
 	GameCreatedEventCreator   = "creator"          // Subsidiary information
-	GameCreatedEventGameIndex = "game-index"       // What game is relevant
-	GameCreatedEventBlack     = "black"            // Is it relevant to me?
-	GameCreatedEventRed       = "red"              // Is it relevant to me?
+	GameCreatedEventGameIndex = "game-index"
+	GameCreatedEventBlack     = "black"
+	GameCreatedEventRed       = "red"
+	GameCreatedEventWager     = "wager"
 )
 
 const (

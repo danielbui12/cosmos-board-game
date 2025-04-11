@@ -8,11 +8,12 @@ import (
 
 var _ sdk.Msg = &MsgCreateGame{}
 
-func NewMsgCreateGame(creator string, black string, red string) *MsgCreateGame {
+func NewMsgCreateGame(creator string, black string, red string, wager uint64) *MsgCreateGame {
 	return &MsgCreateGame{
 		Creator: creator,
 		Black:   black,
 		Red:     red,
+		Wager:   wager,
 	}
 }
 
@@ -30,6 +31,10 @@ func (msg *MsgCreateGame) ValidateBasic() error {
 	_, err = sdk.AccAddressFromBech32(msg.Red)
 	if err != nil {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidAddress, "invalid red address (%s)", err)
+	}
+
+	if msg.Wager <= 0 {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "wager must be greater than 0")
 	}
 
 	return nil
