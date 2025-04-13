@@ -213,6 +213,24 @@ func New(
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) (*App, error) {
+	return NewApp(
+		logger,
+		db,
+		traceStore,
+		loadLatest,
+		appOpts,
+		baseAppOptions...
+	)
+}
+
+func NewApp(
+	logger log.Logger,
+	db dbm.DB,
+	traceStore io.Writer,
+	loadLatest bool,
+	appOpts servertypes.AppOptions,
+	baseAppOptions ...func(*baseapp.BaseApp),
+) (*App, error) {
 	var (
 		app        = &App{ScopedKeepers: make(map[string]capabilitykeeper.ScopedKeeper)}
 		appBuilder *runtime.AppBuilder
