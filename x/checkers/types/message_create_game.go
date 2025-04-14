@@ -8,12 +8,13 @@ import (
 
 var _ sdk.Msg = &MsgCreateGame{}
 
-func NewMsgCreateGame(creator string, black string, red string, wager uint64) *MsgCreateGame {
+func NewMsgCreateGame(creator string, black string, red string, wager uint64, denom string) *MsgCreateGame {
 	return &MsgCreateGame{
 		Creator: creator,
 		Black:   black,
 		Red:     red,
 		Wager:   wager,
+		Denom:   denom,
 	}
 }
 
@@ -35,6 +36,10 @@ func (msg *MsgCreateGame) ValidateBasic() error {
 
 	if msg.Wager <= 0 {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "wager must be greater than 0")
+	}
+
+	if msg.Denom == "" {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "denom must be non-empty")
 	}
 
 	return nil
