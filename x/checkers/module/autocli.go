@@ -33,6 +33,13 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Short:          "Shows a storedGame",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}},
 				},
+				{
+					RpcMethod:      "CanPlayMove",
+					Use:            "can-play-move [game-index] [player] [from-x] [from-y] [to-x] [to-y]",
+					Short:          "Query canPlayMove",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "gameIndex"}, {ProtoField: "player"}, {ProtoField: "fromX"}, {ProtoField: "fromY"}, {ProtoField: "toX"}, {ProtoField: "toY"}},
+				},
+
 				// this line is used by ignite scaffolding # autocli/query
 			},
 		},

@@ -18,8 +18,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/alice/checkers/x/checkers/keeper"
-	"github.com/alice/checkers/x/checkers/types"
 	"github.com/alice/checkers/x/checkers/testutil"
+	"github.com/alice/checkers/x/checkers/types"
 )
 
 func CheckersKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {

@@ -7,8 +7,8 @@ import (
 
 	keepertest "github.com/alice/checkers/testutil/keeper"
 	"github.com/alice/checkers/x/checkers/keeper"
-	"github.com/alice/checkers/x/checkers/testutil"
 	checkers "github.com/alice/checkers/x/checkers/module"
+	"github.com/alice/checkers/x/checkers/testutil"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang/mock/gomock"

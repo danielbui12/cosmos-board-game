@@ -343,7 +343,7 @@ func TestForfeitPlayedTwice(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
-		Wager:   45,
+		Wager:       45,
 	}, game1)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)
@@ -412,7 +412,7 @@ func TestForfeitOlderPlayedTwice(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
-		Wager:   45,
+		Wager:       45,
 	}, game1)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)
@@ -507,7 +507,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
-		Wager:   45,
+		Wager:       45,
 	}, game1)
 
 	game2, found = keeper.GetStoredGame(ctx, "2")
@@ -523,7 +523,7 @@ func TestForfeit2OldestPlayedTwiceIn1Call(t *testing.T) {
 		MoveCount:   uint64(2),
 		BeforeIndex: "-1",
 		AfterIndex:  "-1",
-		Wager:   45,
+		Wager:       45,
 	}, game2)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)

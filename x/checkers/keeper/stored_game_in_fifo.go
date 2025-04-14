@@ -40,7 +40,6 @@ func (k Keeper) RemoveFromFifo(ctx sdk.Context, game *types.StoredGame, info *ty
 	game.AfterIndex = types.NoFifoIndex
 }
 
-
 func (k Keeper) SendToFifoTail(ctx sdk.Context, game *types.StoredGame, info *types.SystemInfo) {
 	if info.FifoHeadIndex == types.NoFifoIndex && info.FifoTailIndex == types.NoFifoIndex {
 		game.BeforeIndex = types.NoFifoIndex

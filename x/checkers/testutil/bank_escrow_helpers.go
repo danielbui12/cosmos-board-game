@@ -3,8 +3,8 @@ package testutil
 import (
 	"context"
 
-	"github.com/alice/checkers/x/checkers/types"
 	"cosmossdk.io/math"
+	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang/mock/gomock"
 )

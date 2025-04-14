@@ -13,7 +13,7 @@ import (
 
 type (
 	Keeper struct {
-		bank       types.BankEscrowKeeper
+		bank         types.BankEscrowKeeper
 		cdc          codec.BinaryCodec
 		storeService store.KVStoreService
 		logger       log.Logger

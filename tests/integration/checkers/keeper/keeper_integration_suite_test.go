@@ -3,13 +3,13 @@ package keeper_test
 import (
 	"testing"
 
+	math "cosmossdk.io/math"
 	checkersapp "github.com/alice/checkers/app"
 	"github.com/alice/checkers/x/checkers/keeper"
 	"github.com/alice/checkers/x/checkers/testutil"
 	"github.com/alice/checkers/x/checkers/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	math "cosmossdk.io/math"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/stretchr/testify/suite"

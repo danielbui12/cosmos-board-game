@@ -5,9 +5,9 @@ import (
 	"time"
 
 	errors "cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	"github.com/alice/checkers/x/checkers/rules"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"cosmossdk.io/math"
 )
 
 func (storedGame StoredGame) GetBlackAddress() (black sdk.AccAddress, err error) {
@@ -35,15 +35,15 @@ func (storedGame StoredGame) ParseGame() (game *rules.Game, err error) {
 func (storedGame StoredGame) GetPlayerAddress(color string) (address sdk.AccAddress, found bool, err error) {
 	black, err := storedGame.GetBlackAddress()
 	if err != nil {
-			return nil, false, err
+		return nil, false, err
 	}
 	red, err := storedGame.GetRedAddress()
 	if err != nil {
-			return nil, false, err
+		return nil, false, err
 	}
 	address, found = map[string]sdk.AccAddress{
-			rules.PieceStrings[rules.BLACK_PLAYER]: black,
-			rules.PieceStrings[rules.RED_PLAYER]:   red,
+		rules.PieceStrings[rules.BLACK_PLAYER]: black,
+		rules.PieceStrings[rules.RED_PLAYER]:   red,
 	}[color]
 	return address, found, nil
 }

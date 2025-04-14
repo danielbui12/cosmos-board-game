@@ -13,8 +13,8 @@ import (
 	_ "cosmossdk.io/x/evidence" // import for side-effects
 	evidencekeeper "cosmossdk.io/x/evidence/keeper"
 
-	feegrantkeeper "cosmossdk.io/x/feegrant/keeper"
 	"cosmossdk.io/x/feegrant"
+	feegrantkeeper "cosmossdk.io/x/feegrant/keeper"
 
 	_ "cosmossdk.io/x/feegrant/module" // import for side-effects
 	nftkeeper "cosmossdk.io/x/nft/keeper"
@@ -46,7 +46,7 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	_ "github.com/cosmos/cosmos-sdk/x/consensus" // import for side-effects
 	consensuskeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
-	
+
 	_ "github.com/cosmos/cosmos-sdk/x/crisis" // import for side-effects
 	crisiskeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
@@ -60,8 +60,8 @@ import (
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
 	"github.com/cosmos/cosmos-sdk/x/group"
+	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
 
 	_ "github.com/cosmos/cosmos-sdk/x/group/module" // import for side-effects
 	_ "github.com/cosmos/cosmos-sdk/x/mint"         // import for side-effects
@@ -89,6 +89,7 @@ import (
 
 	checkersmodulekeeper "github.com/alice/checkers/x/checkers/keeper"
 	checkersmoduletypes "github.com/alice/checkers/x/checkers/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/alice/checkers/docs"
@@ -219,7 +220,7 @@ func New(
 		traceStore,
 		loadLatest,
 		appOpts,
-		baseAppOptions...
+		baseAppOptions...,
 	)
 }
 

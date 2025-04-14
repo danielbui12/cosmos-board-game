@@ -3,9 +3,9 @@ package keeper
 import (
 	"fmt"
 
+	errors "cosmossdk.io/errors"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	errors "cosmossdk.io/errors"
 )
 
 func (k *Keeper) CollectWager(ctx sdk.Context, storedGame *types.StoredGame) error {

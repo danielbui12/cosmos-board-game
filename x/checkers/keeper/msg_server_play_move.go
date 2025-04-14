@@ -4,10 +4,10 @@ import (
 	"context"
 	"strconv"
 
+	errorsmod "cosmossdk.io/errors"
 	"github.com/alice/checkers/x/checkers/rules"
 	"github.com/alice/checkers/x/checkers/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	errorsmod "cosmossdk.io/errors"
 )
 
 func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*types.MsgPlayMoveResponse, error) {
@@ -17,14 +17,14 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	if !found {
 		return nil, errorsmod.Wrapf(types.ErrGameNotFound, "%s", msg.GameIndex)
 	}
-	
+
 	if storedGame.Winner != rules.PieceStrings[rules.NO_PLAYER] {
 		return nil, types.ErrGameFinished
 	}
 
 	isBlack := storedGame.Black == msg.Creator
 	isRed := storedGame.Red == msg.Creator
-	
+
 	var player rules.Player
 
 	if !isBlack && !isRed {
@@ -90,15 +90,15 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	ctx.GasMeter().ConsumeGas(types.PlayMoveGas, "Play move")
 
 	ctx.EventManager().EmitEvent(
-    sdk.NewEvent(types.MovePlayedEventType,
-        sdk.NewAttribute(types.MovePlayedEventCreator, msg.Creator),
-        sdk.NewAttribute(types.MovePlayedEventGameIndex, msg.GameIndex),
-        sdk.NewAttribute(types.MovePlayedEventCapturedX, strconv.FormatInt(int64(captured.X), 10)),
-        sdk.NewAttribute(types.MovePlayedEventCapturedY, strconv.FormatInt(int64(captured.Y), 10)),
-        sdk.NewAttribute(types.MovePlayedEventWinner, rules.PieceStrings[game.Winner()]),
-				sdk.NewAttribute(types.MovePlayedEventBoard, lastBoard),
-    ),
-)
+		sdk.NewEvent(types.MovePlayedEventType,
+			sdk.NewAttribute(types.MovePlayedEventCreator, msg.Creator),
+			sdk.NewAttribute(types.MovePlayedEventGameIndex, msg.GameIndex),
+			sdk.NewAttribute(types.MovePlayedEventCapturedX, strconv.FormatInt(int64(captured.X), 10)),
+			sdk.NewAttribute(types.MovePlayedEventCapturedY, strconv.FormatInt(int64(captured.Y), 10)),
+			sdk.NewAttribute(types.MovePlayedEventWinner, rules.PieceStrings[game.Winner()]),
+			sdk.NewAttribute(types.MovePlayedEventBoard, lastBoard),
+		),
+	)
 
 	return &types.MsgPlayMoveResponse{
 		CapturedX: int32(captured.X),

@@ -12,17 +12,17 @@ import (
 func TestPlayMoveUpToWinner(t *testing.T) {
 	msgSrvr, keeper, context := setupMsgServerWithOneGameForPlayMove(t)
 	ctx := sdk.UnwrapSDKContext(context)
-	
+
 	// Clear events after game creation
 	ctx.EventManager().EmitEvents([]sdk.Event{})
-	
+
 	// Play moves in the correct order
 	testutil.PlayAllMoves(t, msgSrvr, context, "1", bob, carol, testutil.Game1Moves)
 
 	systemInfo, found := keeper.GetSystemInfo(ctx)
 	require.True(t, found)
 	require.EqualValues(t, types.SystemInfo{
-		NextId: 2,
+		NextId:        2,
 		FifoHeadIndex: types.NoFifoIndex,
 		FifoTailIndex: types.NoFifoIndex,
 	}, systemInfo)
@@ -30,14 +30,14 @@ func TestPlayMoveUpToWinner(t *testing.T) {
 	game, found := keeper.GetStoredGame(ctx, "1")
 	require.True(t, found)
 	require.EqualValues(t, types.StoredGame{
-		Index:  "1",
-		Board:  "",
-		Turn:   "b",
-		Black:  bob,
-		Red:    carol,
-		Winner: "b",
-		Deadline: types.FormatDeadline(types.GetNextDeadline(ctx)),
-		MoveCount: 40,
+		Index:       "1",
+		Board:       "",
+		Turn:        "b",
+		Black:       bob,
+		Red:         carol,
+		Winner:      "b",
+		Deadline:    types.FormatDeadline(types.GetNextDeadline(ctx)),
+		MoveCount:   40,
 		BeforeIndex: types.NoFifoIndex,
 		AfterIndex:  types.NoFifoIndex,
 		Wager:       45,

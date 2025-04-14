@@ -19,6 +19,7 @@ import (
 
 	"cosmossdk.io/log"
 	sdkmath "cosmossdk.io/math"
+
 	// pruningtypes "cosmossdk.io/store/pruning/types"
 
 	// bam "github.com/cosmos/cosmos-sdk/baseapp"
@@ -27,6 +28,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+
 	// "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	// cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -35,6 +37,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/testutil/network"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	// "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -177,7 +180,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *cmttypes.ValidatorSet, genAccs
 
 	app.FinalizeBlock(&abci.RequestFinalizeBlock{
 		Height:             app.LastBlockHeight() + 1,
-		Hash:            app.LastCommitID().Hash,
+		Hash:               app.LastCommitID().Hash,
 		NextValidatorsHash: valSet.Hash(),
 	})
 

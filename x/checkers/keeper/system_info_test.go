@@ -36,4 +36,3 @@ func TestSystemInfoRemove(t *testing.T) {
 	_, found := keeper.GetSystemInfo(ctx)
 	require.False(t, found)
 }
-

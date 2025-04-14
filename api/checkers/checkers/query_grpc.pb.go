@@ -23,6 +23,7 @@ const (
 	Query_SystemInfo_FullMethodName    = "/checkers.checkers.Query/SystemInfo"
 	Query_StoredGame_FullMethodName    = "/checkers.checkers.Query/StoredGame"
 	Query_StoredGameAll_FullMethodName = "/checkers.checkers.Query/StoredGameAll"
+	Query_CanPlayMove_FullMethodName   = "/checkers.checkers.Query/CanPlayMove"
 )
 
 // QueryClient is the client API for Query service.
@@ -36,6 +37,8 @@ type QueryClient interface {
 	// Queries a list of StoredGame items.
 	StoredGame(ctx context.Context, in *QueryGetStoredGameRequest, opts ...grpc.CallOption) (*QueryGetStoredGameResponse, error)
 	StoredGameAll(ctx context.Context, in *QueryAllStoredGameRequest, opts ...grpc.CallOption) (*QueryAllStoredGameResponse, error)
+	// Queries a list of CanPlayMove items.
+	CanPlayMove(ctx context.Context, in *QueryCanPlayMoveRequest, opts ...grpc.CallOption) (*QueryCanPlayMoveResponse, error)
 }
 
 type queryClient struct {
@@ -82,6 +85,15 @@ func (c *queryClient) StoredGameAll(ctx context.Context, in *QueryAllStoredGameR
 	return out, nil
 }
 
+func (c *queryClient) CanPlayMove(ctx context.Context, in *QueryCanPlayMoveRequest, opts ...grpc.CallOption) (*QueryCanPlayMoveResponse, error) {
+	out := new(QueryCanPlayMoveResponse)
+	err := c.cc.Invoke(ctx, Query_CanPlayMove_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility
@@ -93,6 +105,8 @@ type QueryServer interface {
 	// Queries a list of StoredGame items.
 	StoredGame(context.Context, *QueryGetStoredGameRequest) (*QueryGetStoredGameResponse, error)
 	StoredGameAll(context.Context, *QueryAllStoredGameRequest) (*QueryAllStoredGameResponse, error)
+	// Queries a list of CanPlayMove items.
+	CanPlayMove(context.Context, *QueryCanPlayMoveRequest) (*QueryCanPlayMoveResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -111,6 +125,9 @@ func (UnimplementedQueryServer) StoredGame(context.Context, *QueryGetStoredGameR
 }
 func (UnimplementedQueryServer) StoredGameAll(context.Context, *QueryAllStoredGameRequest) (*QueryAllStoredGameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StoredGameAll not implemented")
+}
+func (UnimplementedQueryServer) CanPlayMove(context.Context, *QueryCanPlayMoveRequest) (*QueryCanPlayMoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CanPlayMove not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 
@@ -197,6 +214,24 @@ func _Query_StoredGameAll_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_CanPlayMove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCanPlayMoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CanPlayMove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_CanPlayMove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CanPlayMove(ctx, req.(*QueryCanPlayMoveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -219,6 +254,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "StoredGameAll",
 			Handler:    _Query_StoredGameAll_Handler,
+		},
+		{
+			MethodName: "CanPlayMove",
+			Handler:    _Query_CanPlayMove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
