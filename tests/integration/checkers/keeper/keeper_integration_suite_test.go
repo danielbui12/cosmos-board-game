@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	"testing"
-	"time"
 
 	checkersapp "github.com/alice/checkers/app"
 	"github.com/alice/checkers/x/checkers/keeper"
@@ -10,10 +9,10 @@ import (
 	"github.com/alice/checkers/x/checkers/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	math "cosmossdk.io/math"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/stretchr/testify/suite"
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 )
 
 const (
@@ -46,10 +45,11 @@ func TestCheckersKeeperTestSuite(t *testing.T) {
 
 func (suite *IntegrationTestSuite) SetupTest() {
 	app := checkersapp.Setup(false)
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{Time: time.Now()})
+	ctx := app.BaseApp.NewContext(false)
 
-	app.AccountKeeper.SetParams(ctx, authtypes.DefaultParams())
+	app.AccountKeeper.Params.Set(ctx, authtypes.DefaultParams())
 	app.BankKeeper.SetParams(ctx, banktypes.DefaultParams())
+
 	checkersModuleAddress = app.AccountKeeper.GetModuleAddress(types.ModuleName).String()
 
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())
@@ -68,7 +68,7 @@ func makeBalance(address string, balance int64) banktypes.Balance {
 		Coins: sdk.Coins{
 			sdk.Coin{
 				Denom:  sdk.DefaultBondDenom,
-				Amount: sdk.NewInt(balance),
+				Amount: math.NewInt(balance),
 			},
 		},
 	}
@@ -84,13 +84,16 @@ func getBankGenesis() *banktypes.GenesisState {
 		Total: coins[0].Coins.Add(coins[1].Coins...).Add(coins[2].Coins...),
 	}
 
-	state := banktypes.NewGenesisState(
-		banktypes.DefaultParams(),
+	// update total supply
+	bankGenesis := banktypes.NewGenesisState(
+		banktypes.DefaultGenesisState().Params,
 		coins,
 		supply.Total,
-		[]banktypes.Metadata{})
+		[]banktypes.Metadata{},
+		[]banktypes.SendEnabled{},
+	)
 
-	return state
+	return bankGenesis
 }
 
 func (suite *IntegrationTestSuite) setupSuiteWithBalances() {
